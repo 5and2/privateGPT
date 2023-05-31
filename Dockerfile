@@ -1,26 +1,22 @@
-FROM python:3.10
+#FROM python:3.10.11
+#FROM wallies/python-cuda:3.10-cuda11.6-runtime
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    git \
-    curl \
-    wget \
-    unzip \
-    ca-certificates && \
-    rm -rf /var/lib/apt/lists/*
+# Using argument for base image to avoid multiplying Dockerfiles
+ARG BASEIMAGE
+FROM $BASEIMAGE
 
-WORKDIR /app
+RUN groupadd -g 10009 -o privategpt && useradd -m -u 10009 -g 10009 -o -s /bin/bash privategpt
+USER privategpt
+WORKDIR /home/privategpt
 
-COPY requirements.txt .
+COPY ./src/requirements.txt src/requirements.txt
+ARG LLAMA_CMAKE
+#RUN CMAKE_ARGS="-DLLAMA_OPENBLAS=on" FORCE_CMAKE=1 pip install $(grep llama-cpp-python src/requirements.txt)
+RUN pip install --upgrade pip \
+    && ( /bin/bash -c "${LLAMA_CMAKE} pip install \$(grep llama-cpp-python src/requirements.txt)" 2>&1 | tee llama-build.log ) \
+    && ( pip install --no-cache-dir -r src/requirements.txt 2>&1 | tee pip-install.log ) \
+    && pip cache purge
 
-RUN pip3 install -r requirements.txt
+COPY ./src src
 
-COPY . .
-
-CMD [ "python3", "app.py" ]
-
-
-RUN mkdir ./models \
-    && cd models \
-    && wget https://gpt4all.io/models/ggml-gpt4all-j-v1.3-groovy.bin \
-    && wget https://huggingface.co/Pi3141/alpaca-native-7B-ggml/resolve/397e872bf4c83f4c642317a5bf65ce84a105786e/ggml-model-q4_0.bin
+# ENTRYPOINT ["python", "src/privateGPT.py"]
