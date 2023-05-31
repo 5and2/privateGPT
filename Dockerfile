@@ -1,27 +1,26 @@
-FROM ubuntu:latest
+FROM python:3.8
 
-RUN apt-get update -qq && apt-get install -y \
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
     git \
-    python3 \
-    python-is-python3 \
-    pip \
-    wget
+    curl \
+    wget \
+    unzip \
+    ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN cd home \
-    && git clone https://github.com/5and2/privateGPT.git \
-    && cd privateGPT \
-    && pip install -r requirements.txt
+WORKDIR /app
 
-# put these back as single line; split here for readability:
-#RUN echo \
-#"PERSIST_DIRECTORY=db
-#LLAMA_EMBEDDINGS_MODEL=models/ggml-model-q4_0.bin
-#MODEL_TYPE=GPT4All
-#MODEL_PATH=models/ggml-gpt4all-j-v1.3-groovy.bin
-#MODEL_N_CTX=1000" > home/privateGPT/.env \
-#    && chmod a+x home/privateGPT/.env
+COPY requirements.txt .
 
-RUN mkdir home/privateGPT/models \
-    && cd home/privateGPT/models \
+RUN pip install -r requirements.txt
+
+COPY . .
+
+CMD [ "python3", "app.py" ]
+
+
+RUN mkdir ./models \
+    && cd models \
     && wget https://gpt4all.io/models/ggml-gpt4all-j-v1.3-groovy.bin \
     && wget https://huggingface.co/Pi3141/alpaca-native-7B-ggml/resolve/397e872bf4c83f4c642317a5bf65ce84a105786e/ggml-model-q4_0.bin
