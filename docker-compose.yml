@@ -6,4 +6,5 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./source_documents:/app/source_documents
-
+    ports:
+      - 8585:8585
