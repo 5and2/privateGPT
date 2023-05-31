@@ -12,4 +12,4 @@ RUN curl -O https://gpt4all.io/models/ggml-gpt4all-j-v1.3-groovy.bin
 WORKDIR /app
 COPY . .
 
-CMD ["/bin/sh"]
+CMD ["/bin/bash"]
