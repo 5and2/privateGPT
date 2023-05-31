@@ -13,13 +13,13 @@ RUN cd home \
     && pip install -r requirements.txt
 
 # put these back as single line; split here for readability:
-RUN echo \
-"PERSIST_DIRECTORY=db
-LLAMA_EMBEDDINGS_MODEL=models/ggml-model-q4_0.bin
-MODEL_TYPE=GPT4All
-MODEL_PATH=models/ggml-gpt4all-j-v1.3-groovy.bin
-MODEL_N_CTX=1000" > home/privateGPT/.env \
-    && chmod a+x home/privateGPT/.env
+#RUN echo \
+#"PERSIST_DIRECTORY=db
+#LLAMA_EMBEDDINGS_MODEL=models/ggml-model-q4_0.bin
+#MODEL_TYPE=GPT4All
+#MODEL_PATH=models/ggml-gpt4all-j-v1.3-groovy.bin
+#MODEL_N_CTX=1000" > home/privateGPT/.env \
+#    && chmod a+x home/privateGPT/.env
 
 RUN mkdir home/privateGPT/models \
     && cd home/privateGPT/models \
