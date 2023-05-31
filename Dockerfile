@@ -14,10 +14,10 @@ RUN cd home \
 
 # put these back as single line; split here for readability:
 RUN echo \
-"PERSIST_DIRECTORY=db\n
-LLAMA_EMBEDDINGS_MODEL=models/ggml-model-q4_0.bin\n
-MODEL_TYPE=GPT4All\n
-MODEL_PATH=models/ggml-gpt4all-j-v1.3-groovy.bin\n
+"PERSIST_DIRECTORY=db
+LLAMA_EMBEDDINGS_MODEL=models/ggml-model-q4_0.bin
+MODEL_TYPE=GPT4All
+MODEL_PATH=models/ggml-gpt4all-j-v1.3-groovy.bin
 MODEL_N_CTX=1000" > home/privateGPT/.env \
     && chmod a+x home/privateGPT/.env
 
